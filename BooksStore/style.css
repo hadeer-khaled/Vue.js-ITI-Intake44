@@ -1,0 +1,15 @@
+.large {
+  color: green;
+}
+.medium {
+  color: orange;
+}
+.low {
+  color: red;
+}
+
+.more,
+.less,
+.none {
+  font-weight: bold;
+}
