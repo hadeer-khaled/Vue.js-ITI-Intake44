@@ -51,14 +51,29 @@
                 style="width: 100%" />
               <div class="card-body">
                 <h5 class="card-title">{{book.title}}</h5>
-                <p class="card-text">{{book.author}}</p>
-                <p class="card-text">{{book.category}}</p>
-                <p class="card-text">Prics: {{book.price}}</p>
+                <p class="card-text mb-1" style="color: gray; font-size: 12px">
+                  {{book.author}}
+                </p>
+                <p class="card-text" style="color: gray; font-size: 12px">
+                  {{book.category}}
+                </p>
+                <!-- <div class="d-flex justify-content-between"> -->
+                <p class="card-text">Price: {{ formatPrice(book.price) }}</p>
                 <p class="card-text">ISBN: {{book.ISBN}}</p>
-                <p v-bind:class="getPagesColor(book)">Pges: {{book.pages}}</p>
-                <button class="btn btn-primary" @click="addToWishlist(book)">
-                  Add To Wishlist
-                </button>
+                <!-- </div> -->
+                <div
+                  class="d-flex justify-content-between align-items-baseline">
+                  <p v-bind:class="getPagesColor(book)" style="font-size: 10px">
+                    Pages: {{book.pages}}
+                  </p>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-primary rounded-3"
+                    style="font-size: 12px"
+                    @click="addToWishlist(book)">
+                    Add To Wishlist
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -83,8 +98,15 @@
             <tr v-for="item in wishlist.items">
               <td><img v-bind:src="item.imageLink" / style="width: 50px;"></td>
               <td>{{item.title}}</td>
-              <td>{{item.price}}</td>
-              <td><i class="fa-solid fa-trash" style="color: brown"></i></td>
+              <!-- <td>{{item.price}}</td> -->
+              <td>{{ formatPrice(item.price) }}</td>
+              <td>
+                <button
+                  @click="removeFromWishlist(item)"
+                  style="border: none; background-color: transparent">
+                  <i class="fa-solid fa-trash" style="color: brown"></i>
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -103,18 +125,39 @@
         }),
         methods: {
           addToWishlist(book) {
-            this.wishlist.items.push(book);
+            const existsInWishlist = this.wishlist.items.some(
+              (item) => item.title === book.title
+            );
+            if (!existsInWishlist) {
+              this.wishlist.items.push(book);
+            } else {
+              alert("Book already exists in the wishlist!");
+              console.log("Book already exists in the wishlist!");
+            }
+          },
+          removeFromWishlist(item) {
+            const index = this.wishlist.items.findIndex(
+              (wishlistItem) => wishlistItem.title === item.title
+            );
+            this.wishlist.items.splice(index, 1);
+          },
+          formatPrice(price) {
+            const formatter = new Intl.NumberFormat("ar-SA", {
+              style: "currency",
+              currency: "SAR",
+            });
+            return formatter.format(price);
           },
         },
         computed: {
           getPagesColor(book) {
             return function (book) {
               if (book.pages < 200) {
-                return "low";
+                return "badge text-bg-danger";
               } else if (book.pages < 600) {
-                return "medium";
+                return "badge text-bg-warning";
               } else {
-                return "large";
+                return "badge text-bg-success";
               }
             };
           },
