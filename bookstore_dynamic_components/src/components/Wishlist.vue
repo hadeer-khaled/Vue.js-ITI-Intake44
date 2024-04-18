@@ -21,10 +21,12 @@
           <!-- <td>{{item.price}}</td> -->
           <td>{{ formatPrice(item.price) }}</td>
           <td>
-            <button
-              @click="removeFromWishlist(item)"
-              style="border: none; background-color: transparent">
-              <i class="fa-solid fa-trash" style="color: brown"></i>
+            <button @click="removeFromWishlist(item)" class="btn btn-danger">
+              <!-- style="border: none; background-color: transparent" -->
+              <!-- <i class="fa-solid fa-trash" style="color: brown"></i> -->
+              <FontAwesomeIcon icon="{faTrash}" />
+              <!-- <font-awesome-icon icon="faTrash" /> -->
+              Delete
             </button>
           </td>
         </tr>
@@ -34,8 +36,10 @@
 </template>
 
 <script>
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 export default {
   props: ["wishlist", "removeFromWishlist", "formatPrice"],
+  component: { faTrash },
 };
 </script>
 
